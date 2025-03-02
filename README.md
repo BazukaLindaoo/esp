@@ -1,11 +1,9 @@
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
 
 local ESPEnabled = false
 local ESPTransparency = 0.5
-
 local ESPBoxColor = Color3.fromRGB(0, 255, 255)
 local ESPTextColor = Color3.fromRGB(255, 255, 255)
 
@@ -20,8 +18,9 @@ local function createESP(plr)
     if not plr.Character then return end
     local character = plr.Character
     local rootPart = getRoot(character)
+    local head = character:FindFirstChild("Head")
 
-    if not rootPart then return end
+    if not rootPart or not head then return end
 
     local espFolder = CoreGui:FindFirstChild(plr.Name .. "_ESP")
     if espFolder then espFolder:Destroy() end
@@ -34,7 +33,8 @@ local function createESP(plr)
         local box = Instance.new("BoxHandleAdornment")
         box.Adornee = part
         box.AlwaysOnTop = true
-        box.Size = part.Size
+        box.ZIndex = 10
+        box.Size = part.Size + Vector3.new(0.1, 0.1, 0.1)
         box.Transparency = ESPTransparency
         box.Color3 = ESPBoxColor
         box.Parent = espFolder
@@ -44,12 +44,30 @@ local function createESP(plr)
         if part:IsA("BasePart") then createBox(part) end
     end
 
+    local billboardGui = Instance.new("BillboardGui")
+    billboardGui.Adornee = head
+    billboardGui.Size = UDim2.new(0, 150, 0, 50)
+    billboardGui.StudsOffset = Vector3.new(0, 2, 0)
+    billboardGui.AlwaysOnTop = true
+    billboardGui.Parent = espFolder
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Parent = billboardGui
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Font = Enum.Font.GothamBold
+    textLabel.TextSize = 18
+    textLabel.TextColor3 = ESPTextColor
+    textLabel.TextStrokeTransparency = 0.5
+    textLabel.Text = plr.Name
+
     local function updateESP()
         if not character or not rootPart then return end
         if Players.LocalPlayer.Character then
             local localRoot = getRoot(Players.LocalPlayer.Character)
             if localRoot then
                 local distance = (localRoot.Position - rootPart.Position).Magnitude
+                textLabel.Text = plr.Name .. " | " .. math.floor(distance) .. "m"
             end
         end
     end
@@ -141,7 +159,7 @@ icon.Parent = frame
 icon.Size = UDim2.new(0, 60, 0, 60)
 icon.Position = UDim2.new(0, 10, 0, 10)
 icon.BackgroundTransparency = 1
-icon.Image = "https://create.roblox.com/store/asset/10847744848/el-gato"
+icon.Image = "https://www.roblox.com/asset/?id=13809980574"
 
 espButton.MouseButton1Click:Connect(function()
     toggleESP()
