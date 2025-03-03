@@ -159,12 +159,7 @@ icon.Parent = frame
 icon.Size = UDim2.new(0, 60, 0, 60)
 icon.Position = UDim2.new(0, 10, 0, 10)
 icon.BackgroundTransparency = 1
-icon.Image = "https://www.roblox.com/asset/?id=73243565447269"
-
--- Adicionado: alternar a visibilidade do menu ao clicar no ícone
-icon.MouseButton1Click:Connect(function()
-    frame.Visible = not frame.Visible
-end)
+icon.Image = "https://www.roblox.com/asset/?id=13809980574"
 
 espButton.MouseButton1Click:Connect(function()
     toggleESP()
